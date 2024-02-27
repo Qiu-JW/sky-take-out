@@ -32,7 +32,6 @@ public class CategoryServiceImpl implements CategoryService {
     private DishMapper dishMapper;
     @Autowired
     private SetmealMapper setmealMapper;
-
     /**
      * 新增分类
      */
@@ -52,7 +51,6 @@ public class CategoryServiceImpl implements CategoryService {
 
         categoryMapper.insert(category);
     }
-
     /**
      * 分页查询
      */

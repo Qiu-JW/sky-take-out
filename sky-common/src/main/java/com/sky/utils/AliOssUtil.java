@@ -20,7 +20,6 @@ public class AliOssUtil {
     private String bucketName;
 
     /**
-     * 文件上传
      *
      * @param bytes
      * @param objectName
@@ -29,7 +28,7 @@ public class AliOssUtil {
     public String upload(byte[] bytes, String objectName) {
 
         // 创建OSSClient实例。
-        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+       OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
 
         try {
             // 创建PutObject请求。
