@@ -111,12 +111,18 @@ public class DishServiceImpl implements DishService {
         }
 
         //删除菜品表中的数据
-        ids.forEach(id -> {
-            log.info("正在删除菜品");
-            dishMapper.deleteById(id);
-            //删除口味表中的数据
-            log.info("正在删除口味");
-            dishFlavorMapper.deleteByDishId(id);
-        });
+        //这样写sql查询不够精简，可以考虑使用拼接来进行删除，因为使用了for循环，所以是一条一条进行删除
+        // ids.forEach(id -> {
+        //     log.info("正在删除菜品");
+        //     dishMapper.deleteById(id);
+        //     //删除口味表中的数据
+        //     log.info("正在删除口味");
+        //     dishFlavorMapper.deleteByDishId(id);
+        // });
+
+        //根据菜品id来进行批量删除菜品数据和关联的口味数据
+        dishMapper.deleteByIds(ids);
+        //sql :delete from dish_flavor where  dish_id in (?,?,?) 会拼接成这样
+        dishFlavorMapper.deleteByDishIds(ids);
     }
 }

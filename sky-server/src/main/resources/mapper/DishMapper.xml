@@ -12,6 +12,13 @@
         values
             (#{status}, #{name}, #{categoryId}, #{price}, #{image}, #{description}, #{createTime}, #{updateTime},#{createUser}, #{updateUser})
     </insert>
+    <delete id="deleteByIds">
+        delete from  dish where id in
+
+        <foreach collection="ids" open= "(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+     </delete>
 
     <select id="pageQuery" resultType="com.sky.vo.DishVO">
         select d.*,c.name categoryName from dish d left join category c on d.category_id = c.id
