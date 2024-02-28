@@ -11,4 +11,7 @@ sky:
     access-key-id: LTAI5tJY3jFXUKvcuX4Wi9JL
     access-key-secret: rcqk9I1NSdXtzqJ9GschXmIZkJ999l
     bucket-name: web-tlias-ww
-
+  redis:
+    host : localhost
+    port : 6379
+    database : 10
