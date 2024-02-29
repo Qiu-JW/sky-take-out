@@ -28,6 +28,18 @@ public interface SetmealMapper {
             "VALUES (#{categoryId}, #{name}, #{price}, #{status}, #{description}, #{image})")
     void addMeal(SetmealDTO setmealDTO);
 
-
+    /**
+     * 分页查询
+     * @param setmealPageQueryDTO
+     * @return
+     */
     Page<SetmealVO> pageQuery(SetmealPageQueryDTO setmealPageQueryDTO);
+
+    /**
+     * 通过id查询套餐
+     * @param id
+     * @return
+     */
+    @Select("select * from setmeal where id=#{id};")
+    Setmeal getMealById(Long id);
 }
