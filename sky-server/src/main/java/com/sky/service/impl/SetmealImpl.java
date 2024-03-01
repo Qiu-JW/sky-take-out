@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -46,10 +47,10 @@ public class SetmealImpl implements SetmealService {
         /*  将新增数据封装好 */
         Setmeal setmeal=new Setmeal();
         BeanUtils.copyProperties(setmealDTO,setmeal);
-        Integer setmealId= setmealMapper.addMeal(setmeal);
-
+        setmealMapper.addMeal(setmeal);
         /*  新增套餐相应的菜品,需要关联的id去setmealmapper中 */
         List <SetmealDish> setmealDishes= setmealDTO.getSetmealDishes();
+
         if (setmealDishes!=null && setmealDishes.size()>0){
             setmealDishes.forEach(setmealDish -> {
                 setmealDish.setSetmealId(setmeal.getId());
@@ -113,8 +114,11 @@ public class SetmealImpl implements SetmealService {
         BeanUtils.copyProperties(setmealDTO,setmeal);
 
         setmealMapper.upMeal(setmeal);
-        // 选择直接删除
+        // 直接删除原本套餐菜品表中的数据
 
+        List<Long> setmealId = new ArrayList<>();
+        setmealId.add(setmeal.getId());
+        setmealDishMapper.deleteBatch(setmealId);
         /*  修改套餐相应的菜品,需要关联的id去setmealmapper中 */
         List <SetmealDish> setmealDishes= setmealDTO.getSetmealDishes();
         if (setmealDishes!=null && !setmealDishes.isEmpty()){
