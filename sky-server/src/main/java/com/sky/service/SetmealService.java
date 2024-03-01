@@ -28,4 +28,10 @@ public interface SetmealService {
      * @return
      */
     SetmealVO getMealById(Long id);
+
+    /**
+     * 修改套餐数据
+     * @param setmealVO
+     */
+    void upMeal(SetmealVO setmealVO);
 }

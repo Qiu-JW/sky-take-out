@@ -1,12 +1,15 @@
 package com.sky.mapper;
 
 import com.github.pagehelper.Page;
+import com.sky.annotation.AutoFill;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Setmeal;
+import com.sky.enumeration.OperationType;
 import com.sky.vo.SetmealVO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 
 @Mapper
@@ -19,14 +22,19 @@ public interface SetmealMapper {
      */
     @Select("select count(id) from setmeal where category_id = #{categoryId}")
     Integer countByCategoryId(Long id);
-
     /**
-     * 新增菜品
-     * @param setmealDTO
+     * 新增套餐
+     * @param setmeal
      */
-    @Insert("INSERT INTO setmeal (category_id, name, price, status, description, image) " +
-            "VALUES (#{categoryId}, #{name}, #{price}, #{status}, #{description}, #{image})")
-    void addMeal(SetmealDTO setmealDTO);
+
+    @AutoFill(value = OperationType.INSERT)
+    @Insert("INSERT INTO setmeal (category_id, name, price, status, description, image, create_time, update_time, create_user, update_user) " +
+            "VALUES (#{categoryId}, #{name}, #{price}, #{status}, #{description}, #{image}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    Integer addMeal(Setmeal setmeal);
+
+
+
 
     /**
      * 分页查询

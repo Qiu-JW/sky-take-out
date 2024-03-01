@@ -62,5 +62,18 @@ public class SetmealController {
         return Result.success(setmealVO);
     }
 
+    /**
+     * 要修改的套餐数据
+     * @param setmealVO
+     * @return
+     */
+
+    @PutMapping
+    @ApiOperation("修改套餐")
+    public Result upMeal(@RequestBody SetmealVO setmealVO){
+        log.info("要修改的套餐数据:{}",setmealVO);
+        setmealService.upMeal(setmealVO);
+        return Result.success();
+    }
 
 }
