@@ -7,10 +7,9 @@ import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Setmeal;
 import com.sky.enumeration.OperationType;
 import com.sky.vo.SetmealVO;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
 
 @Mapper
 public interface SetmealMapper {
@@ -50,4 +49,28 @@ public interface SetmealMapper {
      */
     @Select("select * from setmeal where id=#{id};")
     Setmeal getMealById(Long id);
+
+    /**
+     * 通过套餐id修改套餐属性
+     * @param setmeal
+     * @return
+     */
+    @AutoFill(value = OperationType.UPDATE)
+    @Update("UPDATE setmeal " +
+            "SET category_id = #{categoryId}, " +
+            "name = #{name}, " +
+            "price = #{price}, " +
+            "status = #{status}, " +
+            "description = #{description}, " +
+            "image = #{image}, " +
+            "update_time = #{updateTime}, " +
+            "update_user = #{updateUser} " +
+            "WHERE id = #{id}")
+    void upMeal(Setmeal setmeal);
+
+    /**
+     * 删除套餐表数据
+     * @param ids
+     */
+    void deleteBatch(List<Long> ids);
 }

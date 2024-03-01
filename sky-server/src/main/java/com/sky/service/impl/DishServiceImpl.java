@@ -97,7 +97,6 @@ public class DishServiceImpl implements DishService {
             log.info("正在判断菜品是否起售");
             // 菜品是起售时候抛出业务异常
             if (dish.getStatus()== StatusConstant.ENABLE){
-
                 throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
             }
         }

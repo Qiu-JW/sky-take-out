@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sky.mapper.SetmealDishMapper">
+    <!--进行批量插入sql-->
     <update id="setMealDish">
         INSERT INTO setmeal_dish (setmeal_id, dish_id, name, price, copies)
         VALUES
@@ -9,8 +10,15 @@
             (#{item.setmealId}, #{item.dishId}, #{item.name}, #{item.price}, #{item.copies})
         </foreach>
     </update>
+<!--    通过套餐id进行批量删除套餐菜品关系-->
+    <delete id="deleteBatch" parameterType="java.util.List">
+        DELETE FROM setmeal_dish
+        WHERE setmeal_id IN
+        <foreach collection="setmealIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 
-    <!--进行批量插入sql-->
 
 
 
