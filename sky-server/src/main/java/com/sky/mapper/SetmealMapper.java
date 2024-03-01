@@ -32,9 +32,6 @@ public interface SetmealMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id")
     Integer addMeal(Setmeal setmeal);
 
-
-
-
     /**
      * 分页查询
      * @param setmealPageQueryDTO
@@ -73,4 +70,12 @@ public interface SetmealMapper {
      * @param ids
      */
     void deleteBatch(List<Long> ids);
+
+    /**
+     * 通过id更新套餐状态
+     * @param status
+     * @param id
+     */
+    @Update("UPDATE setmeal SET status = #{status} WHERE id = #{id}")
+    void update(@Param("status") Long status, @Param("id") Long id);
 }

@@ -90,4 +90,13 @@ public class SetmealController {
         setmealService.deleteBatch(ids);
         return Result.success();
     }
+
+    @PostMapping("/status/{status}")
+    @ApiOperation("起售停售")
+    public Result addMeal(@PathVariable Integer status, Long  id){
+        log.info("目前套餐的状态:{},要修改的套餐是:{}",status,id);
+        setmealService.upStatus(status,id);
+        return Result.success();
+    }
+
 }
