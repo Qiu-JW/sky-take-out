@@ -72,10 +72,10 @@ public interface SetmealMapper {
     void deleteBatch(List<Long> ids);
 
     /**
-     * 通过id更新套餐状态
-     * @param status
-     * @param id
+     * 根据id修改套餐
+     *
+     * @param setmeal
      */
-    @Update("UPDATE setmeal SET status = #{status} WHERE id = #{id}")
-    void update(@Param("status") Long status, @Param("id") Long id);
+    @AutoFill(OperationType.UPDATE)
+    void update(Setmeal setmeal);
 }

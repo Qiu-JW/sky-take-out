@@ -168,12 +168,10 @@ public class SetmealImpl implements SetmealService {
                 });
             }
         }
-        // Setmeal setmeal = Setmeal.builder()
-        //         .id(id)
-        //         .status(status)
-        //         .build();
-        // todo 这里可以修改前面的修改方法，来简化代码，但我不想动
-        long status1=status;
-        setmealMapper.update(status1, id);
+        Setmeal setmeal = Setmeal.builder()
+                .id(id)
+                .status(status)
+                .build();
+        setmealMapper.update(setmeal);
     }
 }
