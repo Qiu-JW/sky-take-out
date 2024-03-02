@@ -37,15 +37,17 @@ public class UserController {
      * @return
      */
     @PostMapping("/login")
-    @ApiOperation("登录")
+    @ApiOperation("微信登录")
     public Result<UserLoginVO> login(@RequestBody UserLoginDTO userLoginDTO) {
         log.info("微信用户登录，授权码为：{}", userLoginDTO.getCode());
-        //  微信登录
+
+        /* 微信登录 */
         User user = userService.wxLogin(userLoginDTO);
-
-
-        Map<String, Object> claims = new HashMap<>();
+        /* 为微信用户生成jwt令牌 */
+        Map<String,Object> claims = new HashMap<>();
         claims.put(JwtClaimsConstant.USER_ID, user.getId());
+
+
         String token = JwtUtil.createJWT(jwtProperties.getUserSecretKey(), jwtProperties.getUserTtl(), claims);
 
         UserLoginVO userLoginVO = UserLoginVO.builder()
@@ -56,4 +58,5 @@ public class UserController {
 
         return Result.success(userLoginVO);
     }
+
 }

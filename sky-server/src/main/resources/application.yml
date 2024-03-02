@@ -45,7 +45,7 @@ sky:
 #    微信小程序登录的配置
     user-secret-key: itheima
     user-token-name: authentication
-    user-ttl: 72000
+    user-ttl: 7200000
   alioss:
     endpoint: ${sky.alioss.endpoint}
     access-key-id: ${sky.alioss.access-key-id}
