@@ -2,7 +2,6 @@ package com.sky.mapper;
 
 import com.github.pagehelper.Page;
 import com.sky.annotation.AutoFill;
-import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Setmeal;
 import com.sky.enumeration.OperationType;
@@ -51,7 +50,7 @@ public interface SetmealMapper {
     /**
      * 通过套餐id修改套餐属性
      * @param setmeal
-     * @return
+
      */
     @AutoFill(value = OperationType.UPDATE)
     @Update("UPDATE setmeal " +
@@ -79,6 +78,7 @@ public interface SetmealMapper {
      */
     @AutoFill(OperationType.UPDATE)
     void update(Setmeal setmeal);
+
     /**
      * 条件查询
      * @param setmeal
@@ -90,7 +90,6 @@ public interface SetmealMapper {
     /**
      * 根据套餐id查询菜品选项
      * @param setmealId
-     * @return
      */
     @Select("select sd.name, sd.copies, d.image, d.description " +
             "from setmeal_dish sd left join dish d on sd.dish_id = d.id " +
