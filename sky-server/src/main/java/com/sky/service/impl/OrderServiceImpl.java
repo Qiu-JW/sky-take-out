@@ -8,6 +8,7 @@ import com.sky.context.BaseContext;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
+import com.sky.dto.OrdersSubmitModifyDTO;
 import com.sky.entity.*;
 import com.sky.exception.AddressBookBusinessException;
 import com.sky.exception.OrderBusinessException;
@@ -168,6 +169,21 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
         orderMapper.update(orders);
+    }
+
+    /**
+     * 订单支付修改版
+     * @param ordersPaymentDTO
+     * @return
+     */
+    @Override
+    public OrdersSubmitModifyDTO submitOrderModify(OrdersPaymentDTO ordersPaymentDTO) {
+        OrdersSubmitModifyDTO  ordersSubmitModifyDTO = new OrdersSubmitModifyDTO();
+        paySuccess(ordersPaymentDTO.getOrderNumber());
+        /*  获取预计送达时间*/
+        Orders ordersDB = orderMapper.getByNumber(ordersPaymentDTO.getOrderNumber());
+        ordersSubmitModifyDTO.setEstimatedDeliveryTime(ordersDB.getEstimatedDeliveryTime());
+        return ordersSubmitModifyDTO;
     }
 
 

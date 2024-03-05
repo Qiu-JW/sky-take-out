@@ -2,6 +2,7 @@ package com.sky.controller.user;
 
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
+import com.sky.dto.OrdersSubmitModifyDTO;
 import com.sky.result.Result;
 import com.sky.service.OrderService;
 import com.sky.vo.OrderPaymentVO;
@@ -33,19 +34,26 @@ public class OrderController {
         OrderSubmitVO orderSubmitVO = orderService.submitOrder(ordersSubmitDTO);
         return Result.success(orderSubmitVO);
     }
+    //
+    // /**
+    //  * 订单支付
+    //  *
+    //  * @param ordersPaymentDTO
+    //  * @return
+    //  */
+    // @PutMapping("/payment")
+    // @ApiOperation("订单支付")
+    // public Result<OrderPaymentVO> payment(@RequestBody OrdersPaymentDTO ordersPaymentDTO) throws Exception {
+    //     log.info("订单支付：{}", ordersPaymentDTO);
+    //     OrderPaymentVO orderPaymentVO = orderService.payment(ordersPaymentDTO);
+    //     log.info("生成预支付交易单：{}", orderPaymentVO);
+    //     return Result.success(orderPaymentVO);
+    // }
 
-    /**
-     * 订单支付
-     *
-     * @param ordersPaymentDTO
-     * @return
-     */
     @PutMapping("/payment")
-    @ApiOperation("订单支付")
-    public Result<OrderPaymentVO> payment(@RequestBody OrdersPaymentDTO ordersPaymentDTO) throws Exception {
-        log.info("订单支付：{}", ordersPaymentDTO);
-        OrderPaymentVO orderPaymentVO = orderService.payment(ordersPaymentDTO);
-        log.info("生成预支付交易单：{}", orderPaymentVO);
-        return Result.success(orderPaymentVO);
+    @ApiOperation("订单支付个人修改版")
+    public Result<OrdersSubmitModifyDTO> payment(@RequestBody OrdersPaymentDTO ordersPaymentDTO){
+        OrdersSubmitModifyDTO ordersSubmitModifyDTO=orderService.submitOrderModify(ordersPaymentDTO);
+        return   Result.success(ordersSubmitModifyDTO);
     }
 }

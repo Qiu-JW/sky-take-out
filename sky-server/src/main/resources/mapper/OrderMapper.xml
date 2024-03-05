@@ -24,7 +24,7 @@
         </where>
     </select>
 
-    <!--跟新数据-->
+    <!--订单支付成功后更新数据-->
     <update id="update" parameterType="com.sky.entity.Orders">
         update orders
         <set>
