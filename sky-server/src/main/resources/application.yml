@@ -52,5 +52,6 @@ sky:
     access-key-secret: ${sky.alioss.access-key-secret}
     bucket-name: ${sky.alioss.bucket-name}
   wechat:
-    appid: ${sky.wechat.appid}
-    secret: ${sky.wechat.secret}
+    appid: ${sky.wechat.appid}  # 微信公众号或小程序的 AppID
+    secret: ${sky.wechat.secret}  # 微信公众号或小程序的 AppSecret
+
