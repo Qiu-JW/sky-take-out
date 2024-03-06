@@ -1,11 +1,15 @@
 package com.sky.mapper;
 
 import com.github.pagehelper.Page;
+import com.sky.dto.OrdersCancelDTO;
+import com.sky.dto.OrdersConfirmDTO;
 import com.sky.dto.OrdersPageQueryDTO;
+import com.sky.dto.OrdersRejectionDTO;
 import com.sky.entity.OrderDetail;
 import com.sky.entity.Orders;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -48,4 +52,38 @@ public interface OrderMapper {
      */
     @Select("select  * from  orders where id=#{id}")
     Orders getOrdersByid(Long id);
+
+    /**
+     * 根据订单id修改来status
+     * @param ordersConfirmDTO
+     */
+    void refuseOrders(OrdersConfirmDTO ordersConfirmDTO);
+
+    /**
+     * 根据订单id来获得status属性
+     * @param id
+     * @return
+     */
+    @Select("SELECT status FROM orders WHERE id = #{id}")
+    Integer getStatusById(Long id);
+
+    /**
+     * 根据订单id填写拒单原因
+     * @param ordersRejectionDTO
+     */
+    @Update("UPDATE orders SET rejection_reason = #{rejectionReason} WHERE id = #{id}")
+    void UpRejectionReason(OrdersRejectionDTO ordersRejectionDTO);
+
+    /**
+     * 根据订单id填写取消原因 这个是未付款
+     * @param ordersCancelDTO
+     */
+    @Update("UPDATE orders SET cancel_reason = #{cancelReason} WHERE id = #{id}")
+    void UpCancelReason(OrdersCancelDTO ordersCancelDTO);
+
+    /**
+     *根据订单id来取消订单
+     * @param ordersConfirmDTO
+     */
+    void upCancelOrders(OrdersConfirmDTO ordersConfirmDTO);
 }

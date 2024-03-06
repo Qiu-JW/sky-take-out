@@ -24,6 +24,9 @@
         </where>
     </select>
 
+
+
+
     <!--订单支付成功后更新数据-->
     <update id="update" parameterType="com.sky.entity.Orders">
         update orders
@@ -55,4 +58,27 @@
         </set>
         where id = #{id}
     </update>
+    <!--根据status判断来取消订单-->
+    <update id="refuseOrders">
+        UPDATE orders
+        <set>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            cancel_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+    <update id="upCancelOrders">
+        UPDATE orders
+        <set>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            cancel_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
 </mapper>
