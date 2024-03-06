@@ -23,6 +23,10 @@
             </if>
         </where>
     </select>
+    <!--统计订单的各种状态数量并返回 因为处理不了类型转换的异常现在已经废弃-->
+<!--    <select id="orderStatusStatistics" resultType="java.util.Map">-->
+<!--        select status , count(*) as count from orders where status in (2,3,4) group by status-->
+<!--    </select>-->
 
 
 

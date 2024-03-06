@@ -3,6 +3,7 @@ package com.sky.service;
 import com.sky.dto.*;
 import com.sky.result.PageResult;
 import com.sky.vo.OrderPaymentVO;
+import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
 
@@ -61,4 +62,10 @@ public interface OrderService {
      * @param ordersCancelDTO
      */
     void cancelOrders(OrdersCancelDTO ordersCancelDTO);
+
+    /**
+     *统计各种类型订单的代码
+     * @return
+     */
+    OrderStatisticsVO statisticsOrders();
 }

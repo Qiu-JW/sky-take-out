@@ -7,6 +7,8 @@ import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.OrderService;
 import com.sky.service.impl.OrderServiceImpl;
+import com.sky.vo.OrderOverViewVO;
+import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -56,11 +58,28 @@ public class OrderController {
         return Result.success();
     }
 
+    /**
+     * 取消未付款订单接口
+     * @param ordersCancelDTO
+     * @return
+     */
     @PutMapping("/cancel")
     @ApiOperation("取消订单")
     public Result cancelOrders(@RequestBody OrdersCancelDTO ordersCancelDTO) {
         orderService.cancelOrders(ordersCancelDTO);
         return Result.success();
+    }
+
+    /**
+     * 统计各种状态订单的控制器
+     * @return
+     */
+    @GetMapping("/statistics")
+    @ApiOperation("统计各个状态的订单数量")
+    public Result<OrderStatisticsVO> statisticsOrders() {
+        /* 统计订单 */
+        OrderStatisticsVO orderStatisticsVO = orderService.statisticsOrders();
+        return Result.success(orderStatisticsVO);
     }
 
 }

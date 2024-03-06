@@ -15,6 +15,7 @@ import com.sky.result.PageResult;
 import com.sky.service.OrderService;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
+import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
 import lombok.extern.slf4j.Slf4j;
@@ -22,11 +23,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 订单
@@ -47,6 +48,7 @@ public class OrderServiceImpl implements OrderService {
     private AddressBookMapper addressBookMapper;
     @Autowired
     private WeChatPayUtil weChatPayUtil;
+
     /**
      * 用户下单
      *
@@ -110,15 +112,17 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 根据条件进行分页查询
+     *
      * @param ordersPageQueryDTO
      * @return
      */
     @Override
     public PageResult conditionSearch(OrdersPageQueryDTO ordersPageQueryDTO) {
-        PageHelper.startPage(ordersPageQueryDTO.getPage(),ordersPageQueryDTO.getPageSize());
-        Page<Orders> page=orderMapper.conditionSearch(ordersPageQueryDTO);
-        return new PageResult(page.getTotal(),page.getResult());
+        PageHelper.startPage(ordersPageQueryDTO.getPage(), ordersPageQueryDTO.getPageSize());
+        Page<Orders> page = orderMapper.conditionSearch(ordersPageQueryDTO);
+        return new PageResult(page.getTotal(), page.getResult());
     }
+
     /**
      * 订单支付
      *
@@ -171,43 +175,47 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 订单支付修改版
+     *
      * @param ordersPaymentDTO
      * @return
      */
     @Override
     public OrdersSubmitModifyDTO submitOrderModify(OrdersPaymentDTO ordersPaymentDTO) {
-        OrdersSubmitModifyDTO  ordersSubmitModifyDTO = new OrdersSubmitModifyDTO();
+        OrdersSubmitModifyDTO ordersSubmitModifyDTO = new OrdersSubmitModifyDTO();
         paySuccess(ordersPaymentDTO.getOrderNumber());
         /*  获取预计送达时间*/
         Orders ordersDB = orderMapper.getByNumber(ordersPaymentDTO.getOrderNumber());
         ordersSubmitModifyDTO.setEstimatedDeliveryTime(ordersDB.getEstimatedDeliveryTime());
         return ordersSubmitModifyDTO;
     }
+
     /**
      * 根据id查询订单详情
+     *
      * @param id
      * @return
      */
     public OrderVO details(Long id) {
         /* 根据id查询订单 */
-        Orders orders =orderMapper.getOrdersByid(id);
+        Orders orders = orderMapper.getOrdersByid(id);
         /* 查询订单对应的菜品/套餐明细 */
         List<OrderDetail> orderDetailList = orderDetailMapper.getDetailByOrderId(orders.getId());
 
         OrderVO orderVO = new OrderVO();
-        BeanUtils.copyProperties(orders,orderVO);
+        BeanUtils.copyProperties(orders, orderVO);
         orderVO.setOrderDetailList(orderDetailList);
         return orderVO;
     }
 
     /**
      * 拒绝接收订单
+     *
      * @param ordersRejectionDTO
      */
     @Transactional
     public void refuseOrders(OrdersRejectionDTO ordersRejectionDTO) {
         /* 业务逻辑需要判断用户是否已经把钱付了 */
-        OrdersConfirmDTO ordersConfirmDTO=new OrdersConfirmDTO();
+        OrdersConfirmDTO ordersConfirmDTO = new OrdersConfirmDTO();
         /* 先填写不接单原因 */
         orderMapper.UpRejectionReason(ordersRejectionDTO);
         /* 取消订单代码，如果真付钱了应该有更多操作 */
@@ -233,11 +241,11 @@ public class OrderServiceImpl implements OrderService {
         orderMapper.UpCancelReason(ordersCancelDTO);
 
         /* 业务逻辑需要判断用户是否已经把钱付了 */
-        OrdersConfirmDTO ordersConfirmDTO=new OrdersConfirmDTO();
+        OrdersConfirmDTO ordersConfirmDTO = new OrdersConfirmDTO();
         ordersConfirmDTO.setId(ordersCancelDTO.getId());
 
         /* 取消订单代码，如果真付钱了应该有更多操作 */
-           /* 获取当前订单的状态 */
+        /* 获取当前订单的状态 */
         Integer status = orderMapper.getStatusById(ordersCancelDTO.getId());
 
         // 根据状态设置要更新的状态
@@ -254,4 +262,59 @@ public class OrderServiceImpl implements OrderService {
         orderMapper.upCancelOrders(ordersConfirmDTO);
     }
 
+
+
+    /**
+     * 一次sql查询订单多种状态，然后进行赋值
+     *
+     * 处理不了类型转换异常，已废弃
+     */
+    // @Override
+    // public OrderStatisticsVO statisticsOrders() {
+    //     OrderStatisticsVO orderStatisticsVO = new OrderStatisticsVO();
+    //
+    //     // 获取订单状态统计信息
+    //     Map<Integer, Integer> statusStatistics = orderMapper.orderStatusStatistics();
+    //     if (statusStatistics != null) {
+    //         // 遍历查询结果，根据不同的状态值设置对应的属性值
+    //         for (Map.Entry<Integer, Integer> entry : statusStatistics.entrySet()) {
+    //             Integer status = entry.getKey();
+    //             Integer count = entry.getValue();
+    //             switch (status) {
+    //                 case 2:
+    //                     orderStatisticsVO.setToBeConfirmed(count);
+    //                     break;
+    //                 case 3:
+    //                     orderStatisticsVO.setConfirmed(count);
+    //                     break;
+    //                 case 4:
+    //                     orderStatisticsVO.setDeliveryInProgress(count);
+    //                     break;
+    //                 default:
+    //                     // 处理其他状态值
+    //                     break;
+    //             }
+    //         }
+    //     }
+    //
+    //     return orderStatisticsVO;
+    // }
+    /**
+     * 各个状态的订单数量统计
+     *
+     * @return
+     */
+    public OrderStatisticsVO statisticsOrders() {
+        // 根据状态，分别查询出待接单、待派送、派送中的订单数量
+        Integer toBeConfirmed = orderMapper.countStatus(Orders.TO_BE_CONFIRMED);
+        Integer confirmed = orderMapper.countStatus(Orders.CONFIRMED);
+        Integer deliveryInProgress = orderMapper.countStatus(Orders.DELIVERY_IN_PROGRESS);
+
+        // 将查询出的数据封装到orderStatisticsVO中响应
+        OrderStatisticsVO orderStatisticsVO = new OrderStatisticsVO();
+        orderStatisticsVO.setToBeConfirmed(toBeConfirmed);
+        orderStatisticsVO.setConfirmed(confirmed);
+        orderStatisticsVO.setDeliveryInProgress(deliveryInProgress);
+        return orderStatisticsVO;
+    }
 }

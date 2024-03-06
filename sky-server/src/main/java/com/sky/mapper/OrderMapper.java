@@ -7,11 +7,13 @@ import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersRejectionDTO;
 import com.sky.entity.OrderDetail;
 import com.sky.entity.Orders;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface OrderMapper {
@@ -86,4 +88,18 @@ public interface OrderMapper {
      * @param ordersConfirmDTO
      */
     void upCancelOrders(OrdersConfirmDTO ordersConfirmDTO);
+
+    /**
+     * 统计订单的各种状态，使用@mapkey
+     * 因为处理不好类型转换的异常，现在已经废弃
+     */
+    // @MapKey("status")
+    // Map<Integer, Integer> orderStatusStatistics();
+
+    /**
+     * 根据状态统计订单数量
+     * @param status
+     */
+    @Select("select count(id) from orders where status = #{status}")
+    Integer countStatus(Integer status);
 }
