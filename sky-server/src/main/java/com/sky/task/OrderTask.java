@@ -22,7 +22,7 @@ public class OrderTask {
      * 对于下单后超过15分钟仍未支付的订单自动修改状态为 [已取消]
      */
     // @Scheduled(cron = "0 * * * * ?")
-    @Scheduled(cron = "1/5 * * * * ?")
+    @Scheduled(cron = "0 * * * * ?")
     public void processTimeoutOrder(){
         log.info("处理支付超时订单：{}", new Date());
 
@@ -44,7 +44,7 @@ public class OrderTask {
      * 派送中状态的订单处理
      * 对于一直处于派送中状态的订单，自动修改状态为 [已完成]
      */
-    @Scheduled(cron = "0/5 * * * * ?")
+    @Scheduled(cron = "0 0 1 * * ?")
     public void processDeliveryOrder(){
         log.info("处理派送中订单：{}", new Date());
 
