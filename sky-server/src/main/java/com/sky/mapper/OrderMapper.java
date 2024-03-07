@@ -53,7 +53,7 @@ public interface OrderMapper {
      * @return
      */
     @Select("select  * from  orders where id=#{id}")
-    Orders getOrdersByid(Long id);
+    Orders getOrdersById(Long id);
 
     /**
      * 根据订单id修改来status

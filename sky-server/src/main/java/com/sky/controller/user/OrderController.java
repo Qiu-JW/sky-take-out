@@ -5,7 +5,6 @@ import com.sky.dto.OrdersSubmitDTO;
 import com.sky.dto.OrdersSubmitModifyDTO;
 import com.sky.result.Result;
 import com.sky.service.OrderService;
-import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -27,7 +27,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
 /**
  * 订单
@@ -72,13 +72,15 @@ public class OrderServiceImpl implements OrderService {
         if (shoppingCartList == null || shoppingCartList.size() == 0) {
             throw new ShoppingCartBusinessException(MessageConstant.SHOPPING_CART_IS_NULL);
         }
-//构造订单数据
+        //构造订单数据
         Orders order = new Orders();
         BeanUtils.copyProperties(ordersSubmitDTO, order);
         order.setPhone(addressBook.getPhone());
         order.setAddress(addressBook.getDetail());
         order.setConsignee(addressBook.getConsignee());
-        order.setNumber(String.valueOf(System.currentTimeMillis()));
+        UUID uuid = UUID.randomUUID();
+
+        order.setNumber(uuid.toString());
         order.setUserId(userId);
         order.setStatus(Orders.PENDING_PAYMENT);
         order.setPayStatus(Orders.UN_PAID);
@@ -153,8 +155,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * 支付成功，修改订单状态
-     *
+     * 支付成功和开始修改订单状态
      * @param outTradeNo
      */
     public void paySuccess(String outTradeNo) {
@@ -190,20 +191,23 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * 根据id查询订单详情
+     * 查询订单详情
      *
      * @param id
      * @return
      */
     public OrderVO details(Long id) {
-        /* 根据id查询订单 */
-        Orders orders = orderMapper.getOrdersByid(id);
-        /* 查询订单对应的菜品/套餐明细 */
+        // 根据id查询订单
+        Orders orders = orderMapper.getOrdersById(id);
+
+        // 查询该订单对应的菜品/套餐明细
         List<OrderDetail> orderDetailList = orderDetailMapper.getDetailByOrderId(orders.getId());
 
+        // 将该订单及其详情封装到OrderVO并返回
         OrderVO orderVO = new OrderVO();
         BeanUtils.copyProperties(orders, orderVO);
         orderVO.setOrderDetailList(orderDetailList);
+
         return orderVO;
     }
 
@@ -264,11 +268,10 @@ public class OrderServiceImpl implements OrderService {
 
 
 
-    /**
-     * 一次sql查询订单多种状态，然后进行赋值
-     *
-     * 处理不了类型转换异常，已废弃
-     */
+    // /**
+    //  * 一次sql查询订单多种状态，然后进行赋值
+    //  * 处理不了类型转换异常，已废弃
+    //  */
     // @Override
     // public OrderStatisticsVO statisticsOrders() {
     //     OrderStatisticsVO orderStatisticsVO = new OrderStatisticsVO();
