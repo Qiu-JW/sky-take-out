@@ -1,5 +1,6 @@
 package com.sky.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -18,6 +19,7 @@ import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import com.sky.websocket.WebSocketServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -49,6 +49,8 @@ public class OrderServiceImpl implements OrderService {
     private AddressBookMapper addressBookMapper;
     @Autowired
     private WeChatPayUtil weChatPayUtil;
+    @Autowired
+    private WebSocketServer webSocketServer;
 
     /**
      * 用户下单
@@ -173,6 +175,18 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
         orderMapper.update(orders);
+
+
+
+        /* 通过websocket向客户端浏览器推送消息 type orderId content */
+        Map map = new HashMap();
+        map.put("type", 1);//通知类型 1来单提醒 2客户催单
+        map.put("orderId", orders.getId());//订单id
+        map.put("content","订单号:" + outTradeNo);
+
+        webSocketServer.sendToAllClient(JSON.toJSONString(map));
+
+
     }
 
     /**
@@ -385,6 +399,7 @@ public class OrderServiceImpl implements OrderService {
         OrdersConfirmDTO ordersConfirmDTO = new OrdersConfirmDTO();
         ordersConfirmDTO.setId(id);
 
+        /* 取消订单代码，如果真付钱了应该有更多操作 */
         /* 取消订单代码，如果真付钱了应该有更多操作 */
         /* 获取当前订单的状态 */
         Integer status = orderMapper.getStatusById(id);
