@@ -74,4 +74,10 @@ public interface OrderService {
      * @param ordersCancelDTO
      */
     void confirmOrders(OrdersConfirmDTO ordersCancelDTO);
+
+    /**
+     * 派送订单id
+     * @param id
+     */
+    void deliveryOrders(Long id);
 }

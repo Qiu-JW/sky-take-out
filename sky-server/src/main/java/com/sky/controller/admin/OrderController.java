@@ -94,4 +94,17 @@ public class OrderController {
         return Result.success();
     }
 
+    /**
+     * 派送订单id
+     * @param id
+     */
+    @PutMapping("/delivery/{id}")
+    @ApiOperation("派送订单")
+    public Result deliveryOrders(@PathVariable("id") Long id) {
+        OrdersConfirmDTO ordersConfirmDTO =new OrdersConfirmDTO();
+        orderService.deliveryOrders(id);
+        return Result.success();
+    }
+
+
 }

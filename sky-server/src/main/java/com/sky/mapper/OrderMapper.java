@@ -104,9 +104,11 @@ public interface OrderMapper {
     Integer countStatus(Integer status);
 
     /**
-     *接取订单接口
+     *接取订单接口 同时也是根据id和状态来变成各种订单状态的代码
      * @param ordersCancelDTO
      */
     @Update("update orders set status=#{status} where id=#{id}")
     void confirmOrders(OrdersConfirmDTO ordersCancelDTO);
+
+
 }

@@ -330,4 +330,15 @@ public class OrderServiceImpl implements OrderService {
         ordersCancelDTO.setStatus(3);
         orderMapper.confirmOrders(ordersCancelDTO);
     }
+    /**
+     * 派送订单id
+     * @param id
+     */
+    @Override
+    public void deliveryOrders(Long id) {
+        OrdersConfirmDTO ordersConfirmDTO =new OrdersConfirmDTO();
+        ordersConfirmDTO.setId(id);
+        ordersConfirmDTO.setStatus(4);
+        orderMapper.confirmOrders(ordersConfirmDTO);
+    }
 }
