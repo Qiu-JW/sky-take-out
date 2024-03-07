@@ -101,4 +101,10 @@ public interface OrderService {
      * @param id
      */
     void userCancelById(Long id);
+
+    /**
+     * 再来一单代码
+     * @param id
+     */
+    void repetition(Long id);
 }
