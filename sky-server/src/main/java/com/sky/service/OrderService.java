@@ -80,4 +80,19 @@ public interface OrderService {
      * @param id
      */
     void deliveryOrders(Long id);
+
+    /**
+     * 完成订单
+     * @param id
+     */
+    void completeOrders(Long id);
+
+    /**
+     * 历史订单查询接口
+     * @param page
+     * @param pageSize
+     * @param status
+     * @return
+     */
+    PageResult pageQueryUser(int page, int pageSize, Integer status);
 }

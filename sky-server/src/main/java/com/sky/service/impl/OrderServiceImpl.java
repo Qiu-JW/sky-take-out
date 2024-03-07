@@ -200,8 +200,10 @@ public class OrderServiceImpl implements OrderService {
         // 根据id查询订单
         Orders orders = orderMapper.getOrdersById(id);
 
+        /* 这样写减少一个方法 */
+        Long orderId=orders.getId();
         // 查询该订单对应的菜品/套餐明细
-        List<OrderDetail> orderDetailList = orderDetailMapper.getDetailByOrderId(orders.getId());
+        List<OrderDetail> orderDetailList = orderDetailMapper.getDetailByOrderId(orderId);
 
         // 将该订单及其详情封装到OrderVO并返回
         OrderVO orderVO = new OrderVO();
@@ -210,6 +212,8 @@ public class OrderServiceImpl implements OrderService {
 
         return orderVO;
     }
+
+
 
     /**
      * 拒绝接收订单
@@ -340,5 +344,55 @@ public class OrderServiceImpl implements OrderService {
         ordersConfirmDTO.setId(id);
         ordersConfirmDTO.setStatus(4);
         orderMapper.confirmOrders(ordersConfirmDTO);
+    }
+
+    /**
+     * 完成订单
+     * @param id
+     */
+    @Override
+    public void completeOrders(Long id) {
+        OrdersConfirmDTO ordersConfirmDTO =new OrdersConfirmDTO();
+        ordersConfirmDTO.setId(id);
+        ordersConfirmDTO.setStatus(5);
+        orderMapper.confirmOrders(ordersConfirmDTO);
+    }
+
+    /**
+     * 用户端订单分页查询
+     * @param pageNum
+     * @param pageSize
+     * @param status
+     * @return
+     */
+    public PageResult pageQueryUser(int pageNum, int pageSize, Integer status) {
+        // 设置分页
+        PageHelper.startPage(pageNum, pageSize);
+
+        OrdersPageQueryDTO ordersPageQueryDTO = new OrdersPageQueryDTO();
+        ordersPageQueryDTO.setUserId(BaseContext.getCurrentId());
+        ordersPageQueryDTO.setStatus(status);
+
+        // 分页条件查询
+        Page<Orders> page = orderMapper.pageQuery(ordersPageQueryDTO);
+
+        List<OrderVO> list = new ArrayList();
+
+        // 查询出订单明细，并封装入OrderVO进行响应
+        if (page != null && page.getTotal() > 0) {
+            for (Orders orders : page) {
+                Long orderId = orders.getId();// 订单id
+
+                // 查询订单明细
+                List<OrderDetail> orderDetails = orderDetailMapper.getDetailByOrderId(orderId);
+
+                OrderVO orderVO = new OrderVO();
+                BeanUtils.copyProperties(orders, orderVO);
+                orderVO.setOrderDetailList(orderDetails);
+
+                list.add(orderVO);
+            }
+        }
+        return new PageResult(page.getTotal(), list);
     }
 }

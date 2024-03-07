@@ -15,11 +15,15 @@ public interface OrderDetailMapper {
      */
     void insertBatch(List<OrderDetail> orderDetails);
 
+    /* 才发现这里代码原本查的是订单的明细 */
+
     /**
      * 根据订单id查询订单明细
      * @param id
      * @return
      */
-    @Select("select * from orders where id=#{id}")
+    @Select("select * from order_detail where order_id = #{orderId}")
     List<OrderDetail> getDetailByOrderId(Long id);
+
+
 }

@@ -101,10 +101,19 @@ public class OrderController {
     @PutMapping("/delivery/{id}")
     @ApiOperation("派送订单")
     public Result deliveryOrders(@PathVariable("id") Long id) {
-        OrdersConfirmDTO ordersConfirmDTO =new OrdersConfirmDTO();
         orderService.deliveryOrders(id);
         return Result.success();
     }
 
+    /**
+     * 完成订单
+     * @param id
+     */
+    @PutMapping("/complete/{id}")
+    @ApiOperation("完成订单")
+    public Result completeOrders(@PathVariable("id") Long id) {
+        orderService.completeOrders(id);
+        return Result.success();
+    }
 
 }

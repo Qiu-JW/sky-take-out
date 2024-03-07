@@ -23,6 +23,36 @@
             </if>
         </where>
     </select>
+
+    <!--分页查询接口-->
+    <select id="pageQuery" resultType="Orders">
+        select * from orders
+        <where>
+            <if test="number != null and number!=''">
+                and number like concat('%',#{number},'%')
+            </if>
+            <if test="phone != null and phone!=''">
+                and phone like concat('%',#{phone},'%')
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="beginTime != null">
+                and order_time &gt;= #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and order_time &lt;= #{endTime}
+            </if>
+        </where>
+        order by order_time desc
+    </select>
+
+
+
+
     <!--统计订单的各种状态数量并返回 因为处理不了类型转换的异常现在已经废弃-->
 <!--    <select id="orderStatusStatistics" resultType="java.util.Map">-->
 <!--        select status , count(*) as count from orders where status in (2,3,4) group by status-->
