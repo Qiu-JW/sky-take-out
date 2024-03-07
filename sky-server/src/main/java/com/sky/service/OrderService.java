@@ -95,4 +95,10 @@ public interface OrderService {
      * @return
      */
     PageResult pageQueryUser(int page, int pageSize, Integer status);
+
+    /**
+     * 取消订单
+     * @param id
+     */
+    void userCancelById(Long id);
 }
