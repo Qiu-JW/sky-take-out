@@ -317,4 +317,14 @@ public class OrderServiceImpl implements OrderService {
         orderStatisticsVO.setDeliveryInProgress(deliveryInProgress);
         return orderStatisticsVO;
     }
+
+    /**
+     * 接取订单的接口
+     * @param ordersCancelDTO
+     */
+    @Override
+    public void confirmOrders(OrdersConfirmDTO ordersCancelDTO) {
+        ordersCancelDTO.setStatus(3);
+        orderMapper.confirmOrders(ordersCancelDTO);
+    }
 }

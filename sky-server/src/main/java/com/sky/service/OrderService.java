@@ -68,4 +68,10 @@ public interface OrderService {
      * @return
      */
     OrderStatisticsVO statisticsOrders();
+
+    /**
+     * 接单代码，修改订单状态即可
+     * @param ordersCancelDTO
+     */
+    void confirmOrders(OrdersConfirmDTO ordersCancelDTO);
 }

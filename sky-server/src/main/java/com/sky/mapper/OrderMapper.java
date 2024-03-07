@@ -102,4 +102,11 @@ public interface OrderMapper {
      */
     @Select("select count(id) from orders where status = #{status}")
     Integer countStatus(Integer status);
+
+    /**
+     *接取订单接口
+     * @param ordersCancelDTO
+     */
+    @Update("update orders set status=#{status} where id=#{id}")
+    void confirmOrders(OrdersConfirmDTO ordersCancelDTO);
 }

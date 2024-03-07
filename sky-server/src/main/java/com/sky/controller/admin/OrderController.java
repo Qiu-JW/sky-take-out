@@ -1,13 +1,13 @@
 package com.sky.controller.admin;
 
 import com.sky.dto.OrdersCancelDTO;
+import com.sky.dto.OrdersConfirmDTO;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersRejectionDTO;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.OrderService;
 import com.sky.service.impl.OrderServiceImpl;
-import com.sky.vo.OrderOverViewVO;
 import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderVO;
 import io.swagger.annotations.Api;
@@ -80,6 +80,18 @@ public class OrderController {
         /* 统计订单 */
         OrderStatisticsVO orderStatisticsVO = orderService.statisticsOrders();
         return Result.success(orderStatisticsVO);
+    }
+
+    /**
+     * 进行接取订单
+     * @param ordersCancelDTO
+     * @return
+     */
+    @PutMapping("/confirm")
+    @ApiOperation("接单")
+    public Result confirmOrders(@RequestBody OrdersConfirmDTO ordersCancelDTO) {
+        orderService.confirmOrders(ordersCancelDTO);
+        return Result.success();
     }
 
 }
