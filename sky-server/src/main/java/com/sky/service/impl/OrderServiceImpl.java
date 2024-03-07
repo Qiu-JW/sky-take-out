@@ -21,7 +21,6 @@ import com.sky.vo.OrderVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
@@ -233,7 +232,11 @@ public class OrderServiceImpl implements OrderService {
         orderMapper.refuseOrders(ordersConfirmDTO);
     }
 
-    @Override
+    /**
+     * 取消订单
+     * @param ordersCancelDTO
+     */
+    @Transactional
     public void cancelOrders(OrdersCancelDTO ordersCancelDTO) {
         /* 先填写取消单子原因 */
         orderMapper.UpCancelReason(ordersCancelDTO);
@@ -371,30 +374,34 @@ public class OrderServiceImpl implements OrderService {
         return new PageResult(page.getTotal(), list);
     }
 
-    @Override
+    /**
+     * 用户端的取消订单代码
+     * @param id
+     */
+    @Transactional
     public void userCancelById(Long id) {
+        /* 业务逻辑需要判断用户是否已经把钱付了 */
+        OrdersConfirmDTO ordersConfirmDTO = new OrdersConfirmDTO();
+        ordersConfirmDTO.setId(id);
 
+        /* 取消订单代码，如果真付钱了应该有更多操作 */
+        /* 获取当前订单的状态 */
+        Integer status = orderMapper.getStatusById(id);
+        if (status != null) {
+            if (status == Orders.PAID) {
+                ordersConfirmDTO.setStatus(Orders.CANCELLED); // 待接单状态修改为已取消状态
+            } else if (status == Orders.REFUND) {
+                ordersConfirmDTO.setStatus(7); // 待接单状态修改为退款状态
+            }
+        }
 
-        // /* 业务逻辑需要判断用户是否已经把钱付了 */
-        // OrdersConfirmDTO ordersConfirmDTO = new OrdersConfirmDTO();
-        // ordersConfirmDTO.setId(ordersCancelDTO.getId());
-        //
-        // /* 取消订单代码，如果真付钱了应该有更多操作 */
-        // /* 获取当前订单的状态 */
-        // Integer status = orderMapper.getStatusById(ordersCancelDTO.getId());
-        // //我是先开发管理端的,,,,
-        // // 根据状态设置要更新的状态
-        // //本段代码其实没什么必要的，因为前端发来的请求虽然都是取消订单请求但居然不一样。
-        // // 上面也是如此。目前我还不知道为什么要这么设计。可能一个是取消订单一个是不接订单吧
-        // if (status != null) {
-        //     if (status == 1) {
-        //         ordersConfirmDTO.setStatus(6); // 待接单状态修改为已取消状态
-        //     } else if (status == 2) {
-        //         ordersConfirmDTO.setStatus(7); // 待接单状态修改为退款状态
-        //     }
-        // }
-        //
-        // orderMapper.upCancelOrders(ordersConfirmDTO);
+        /* 自己创建的修改订单的支付状态的类 */
+        OrdersPaymentAlterDTO ordersPaymentAlterDTO =new OrdersPaymentAlterDTO();
+        ordersPaymentAlterDTO.setId(id);
+        ordersPaymentAlterDTO.setPayStatus(Orders.REFUND);
+        orderMapper.upCancelOrders(ordersConfirmDTO);
+        orderMapper.upPayOrders(ordersPaymentAlterDTO);
+
     }
 
 }

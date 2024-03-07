@@ -1,19 +1,11 @@
 package com.sky.mapper;
 
 import com.github.pagehelper.Page;
-import com.sky.dto.OrdersCancelDTO;
-import com.sky.dto.OrdersConfirmDTO;
-import com.sky.dto.OrdersPageQueryDTO;
-import com.sky.dto.OrdersRejectionDTO;
-import com.sky.entity.OrderDetail;
+import com.sky.dto.*;
 import com.sky.entity.Orders;
-import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-
-import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface OrderMapper {
@@ -116,4 +108,11 @@ public interface OrderMapper {
      * @param ordersPageQueryDTO
      */
     Page<Orders> pageQuery(OrdersPageQueryDTO ordersPageQueryDTO);
+
+    /**
+     *修改订单的支付状态
+     * @param ordersPaymentAlterDTO
+     */
+    @Update("update orders set pay_status=#{payStatus} where id=#{id}")
+    void upPayOrders(OrdersPaymentAlterDTO ordersPaymentAlterDTO);
 }
