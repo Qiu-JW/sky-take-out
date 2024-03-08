@@ -142,4 +142,12 @@ public interface OrderMapper {
      */
     Integer countByMap(Map map);
 
+    /**
+     * 查询商品销量排名
+     * @param begin
+     * @param end
+     */
+    List<GoodsSalesDTO> getSalesTop10(LocalDateTime begin, LocalDateTime end);
+
+
 }

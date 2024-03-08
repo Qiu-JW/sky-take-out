@@ -80,6 +80,20 @@
             </if>
         </where>
     </select>
+    <select id="getSalesTop10" resultType="com.sky.dto.GoodsSalesDTO">
+        select od.name name,sum(od.number) number from order_detail od ,orders o
+        where od.order_id = o.id
+        and o.status = 5
+        <if test="begin != null">
+            and order_time &gt;= #{begin}
+        </if>
+        <if test="end != null">
+            and order_time &lt;= #{end}
+        </if>
+        group by name
+        order by number desc
+        limit 0, 10
+    </select>
 
 
     <!--统计订单的各种状态数量并返回 因为处理不了类型转换的异常现在已经废弃-->
@@ -144,5 +158,5 @@
     </update>
 
 
-
 </mapper>
+
