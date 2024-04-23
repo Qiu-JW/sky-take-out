@@ -6,6 +6,7 @@ sky:
     database: sky_take_out
     username: root
     password: 123456
+  #    下面云存储地址已失效
   alioss:
     endpoint: oss-cn-beijing.aliyuncs.com
     access-key-id: LTAI5tJY3jFXUKvcuX4Wi9JL
@@ -15,6 +16,7 @@ sky:
     host : localhost
     port : 6379
     database : 10
+  #  下面小程序已失效
   wechat:
-    appid: wx18bc3543dbc202a6
-    secret: 8e3879edb9067a7d10f5debf2abcb15a
+    appid: 你自己的
+    secret: 你自己的
